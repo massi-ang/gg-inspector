@@ -66,17 +66,23 @@ function parseElement(e) {
         switch (_a.label) {
             case 0:
                 program = new commander_1.Command();
-                program.version('0.0.1');
+                program.version('1.1.0');
                 program.command('show', {
                     isDefault: true
                 }).option('-f, --file <file>', 'group.json file', '/greengrass/ggc/deployment/group/group.json').action(function (cmdObj) { return __awaiter(void 0, void 0, void 0, function () {
-                    var f, group, group_def;
+                    var f, group, group_def, err_1;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, fs.promises.readFile(cmdObj.file)];
+                            case 0:
+                                _a.trys.push([0, 2, , 3]);
+                                return [4 /*yield*/, fs.promises.readFile(cmdObj.file)];
                             case 1:
                                 f = _a.sent();
                                 group = JSON.parse(f.toString('utf8'));
+                                if (group.Cores.length === 0) {
+                                    console.log('This group has not been deployed yet');
+                                    return [2 /*return*/];
+                                }
                                 console.log(chalk.yellowBright('Group:') + " " + group.Arn.split('/')[3] + ", version: " + group.Arn.split('/')[5]);
                                 console.log(chalk.greenBright('Region: ') + ("" + group.Region));
                                 console.log(chalk.greenBright('Core:') + " " + group.Cores[0].thingArn.split('/')[1] + "\n");
@@ -89,21 +95,41 @@ function parseElement(e) {
                                 });
                                 console.log(chalk.greenBright('Subscriptions:'));
                                 group_def.Subscriptions.Content.forEach(function (s) {
-                                    console.log("\t" + parseElement(s.Source) + " " + chalk.blueBright(s.Subject) + " -> " + parseElement(s.Target));
+                                    console.log("\t" + parseElement(s.Source) + " \u2794 " + chalk.blueBright(s.Subject) + " \u2794 " + parseElement(s.Target));
+                                });
+                                console.log(chalk.greenBright('Resources:'));
+                                group_def.Resources.Content.forEach(function (r) {
+                                    console.log("\t" + r.Type + " " + JSON.stringify(r.Data, undefined, 2));
                                 });
                                 console.log(chalk.greenBright('Logging:'));
                                 group_def.Logging.Content.forEach(function (l) {
                                     console.log("\t" + l.Level + " " + l.Type + " " + l.Component);
                                 });
-                                return [2 /*return*/];
+                                return [3 /*break*/, 3];
+                            case 2:
+                                err_1 = _a.sent();
+                                if (err_1.name === 'TypeError') {
+                                    console.log('Please install Node.js v10 or higher');
+                                    process.exit(1);
+                                }
+                                else if (err_1.name === 'Error' && err_1.errno === -13) {
+                                    console.log('Run this command from a root or user with enough privileges to access ${cdmObj.file}');
+                                    process.exit(1);
+                                }
+                                console.error(err_1);
+                                process.exit(1);
+                                return [3 /*break*/, 3];
+                            case 3: return [2 /*return*/];
                         }
                     });
                 }); });
-                program.command('logs').option('-r, --root <dir>', 'The root folder for the logs', '/greengrass/ggc/var/log').action(function (cmdObj) { return __awaiter(void 0, void 0, void 0, function () {
-                    var files;
+                program.command('logs').option('-r, --root <dir>', 'The root folder for the logs', '/greengrass/ggc/var/log/system').action(function (cmdObj) { return __awaiter(void 0, void 0, void 0, function () {
+                    var files, err_2;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, fs.promises.readdir(cmdObj.root)];
+                            case 0:
+                                _a.trys.push([0, 2, , 3]);
+                                return [4 /*yield*/, fs.promises.readdir(cmdObj.root)];
                             case 1:
                                 files = _a.sent();
                                 files.forEach(function (f) {
@@ -114,7 +140,21 @@ function parseElement(e) {
                                     t.on("error", function (e) { console.log(e); t.unwatch(); });
                                     t.watch();
                                 });
-                                return [2 /*return*/];
+                                return [3 /*break*/, 3];
+                            case 2:
+                                err_2 = _a.sent();
+                                if (err_2.name === 'TypeError') {
+                                    console.log('Please install Node.js v10 or higher');
+                                    process.exit(1);
+                                }
+                                else if (err_2.name === 'Error' && err_2.errno === -13) {
+                                    console.log('Run this command from a root or user with enough privileges to access the ${cdmObj.root} folder');
+                                    process.exit(1);
+                                }
+                                console.error(err_2);
+                                process.exit(1);
+                                return [3 /*break*/, 3];
+                            case 3: return [2 /*return*/];
                         }
                     });
                 }); });
