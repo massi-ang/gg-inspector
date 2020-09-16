@@ -1,0 +1,36 @@
+{
+  "name": "@mirai73/gg-inspector",
+  "version": "1.0.3",
+  "description": "A CLI tool to inspect the AWS IoT Greengrass group running on the device",
+  "main": "index.js",
+  "bin": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc *.ts"
+  },
+  "keywords": [
+    "AWS",
+    "Greengrass"
+  ],
+  "author": "Massimiliano Angelino",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/commander": "^2.12.2",
+    "@types/fs-promise": "^2.0.0",
+    "@types/node": "^14.10.1",
+    "@types/tail": "^2.0.0",
+    "chalk": "^4.1.0",
+    "commander": "^6.1.0",
+    "tail": "^2.0.4"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/massi-ang/gg-inspector.git"
+  },
+  "bugs": {
+    "url": "https://github.com/massi-ang/gg-inspector/issues"
+  },
+  "homepage": "https://github.com/massi-ang/gg-inspector#readme"
+}
